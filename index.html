@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG 路径动画实验室</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <h1>SVG 路径动画实验室</h1>
+  <div id="hud">初始化…</div>
+</header>
+<main>
+  <section class="panel">
+    <label>路径 d（支持 M/L/H/V/C/S/Q/T/A/Z，可拖拽画布上的控制点）</label>
+    <textarea id="pathInput" rows="4" spellcheck="false"></textarea>
+    <div id="errors" class="ok"></div>
+
+    <div class="row">
+      <button id="playBtn">▶ 播放</button>
+      <label>速度 <input type="range" id="speed" min="20" max="600" value="120"></label>
+      <label><input type="checkbox" id="showControls" checked> 控制点</label>
+      <label><input type="checkbox" id="showNormal" checked> 法线</label>
+      <label><input type="checkbox" id="autoDegrade" checked> 自动降级</label>
+      <select id="qualitySelect">
+        <option value="0">高精度</option>
+        <option value="1" selected>标准</option>
+        <option value="2">省点</option>
+        <option value="3">直线近似</option>
+      </select>
+      <span id="quality">标准</span>
+    </div>
+
+    <label>变形目标路径（滑块控制混合比例）</label>
+    <textarea id="morphInput" rows="2" spellcheck="false"></textarea>
+    <input type="range" id="morphSlider" min="0" max="100" value="0">
+
+    <div class="row">
+      <label>裁剪起点 <input type="range" id="clipStart" min="0" max="100" value="0"></label>
+      <label>裁剪终点 <input type="range" id="clipEnd" min="0" max="100" value="100"></label>
+    </div>
+    <label>裁剪结果 d</label>
+    <textarea id="clipOutput" rows="2" readonly></textarea>
+
+    <div class="row">
+      <input id="presetName" list="presetList" placeholder="预设名称">
+      <datalist id="presetList"></datalist>
+      <button id="savePreset">保存</button>
+      <button id="loadPreset">读取</button>
+      <button id="deletePreset">删除</button>
+      <button id="genLong">生成长路径压测</button>
+    </div>
+  </section>
+  <canvas id="stage" width="820" height="420"></canvas>
+</main>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

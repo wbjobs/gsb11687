@@ -1,0 +1,18 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: system-ui, sans-serif; background: #f4f6f8; color: #222; }
+header { display: flex; align-items: baseline; gap: 16px; padding: 10px 16px; background: #1f2d3d; color: #fff; }
+header h1 { font-size: 18px; margin: 0; }
+#hud { font-size: 12px; color: #9fd3ff; font-family: monospace; }
+main { display: flex; gap: 12px; padding: 12px; align-items: flex-start; flex-wrap: wrap; }
+.panel { flex: 1 1 360px; display: flex; flex-direction: column; gap: 8px; background: #fff; padding: 12px; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.1); }
+.panel label { font-size: 12px; color: #555; }
+textarea { width: 100%; font-family: monospace; font-size: 12px; border: 1px solid #ccc; border-radius: 4px; padding: 6px; }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; font-size: 13px; }
+.row label { display: flex; align-items: center; gap: 4px; }
+button { padding: 4px 12px; border: none; border-radius: 4px; background: #2c7be5; color: #fff; cursor: pointer; }
+button:hover { background: #1a68d1; }
+#errors { font-size: 12px; padding: 6px; border-radius: 4px; }
+#errors.ok { color: #1e7e34; background: #e6f4ea; }
+#errors.err { color: #b02a37; background: #fbe9eb; }
+#stage { background: #fff; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.1); cursor: crosshair; }
+#quality { font-size: 12px; color: #888; }
