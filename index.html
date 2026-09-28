@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG 路径实验室</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header>
+  <h1>SVG 路径实验室</h1>
+  <span id="info">长度: - 采样点: - FPS: -</span>
+</header>
+<main>
+  <section class="viewport">
+    <svg id="stage" viewBox="0 0 800 600" width="800" height="600">
+      <path id="svgPath" fill="none" stroke="#90caf9" stroke-width="2" opacity="0.8"/>
+      <path id="svgClipPath" fill="none" stroke="#e1bee7" stroke-width="4" opacity="0.9"/>
+      <g id="mover">
+        <path d="M-8 -6 L10 0 L-8 6 Z" fill="#ff5722" stroke="#fff" stroke-width="1"/>
+      </g>
+    </svg>
+    <canvas id="overlay" width="800" height="600"></canvas>
+  </section>
+  <aside class="panel">
+    <label>路径数据 (d)
+      <textarea id="pathInput" rows="4" spellcheck="false">M50 300 C150 100 350 100 450 300 S750 500 700 300 A80 60 30 0 1 500 200 Q400 100 300 250 T100 300 Z</textarea>
+    </label>
+    <div id="errors" class="ok"></div>
+    <div class="row">
+      <button id="playBtn">播放</button>
+      <label>速度 <input id="speed" type="range" min="0.02" max="0.6" step="0.01" value="0.12"></label>
+    </div>
+    <label>进度 <input id="progress" type="range" min="0" max="1" step="0.001" value="0"></label>
+    <div class="row">
+      <label><input id="showCtrl" type="checkbox" checked> 控制点</label>
+      <label><input id="showTN" type="checkbox" checked> 切线/法线</label>
+      <button id="degradeBtn">切换降级</button>
+    </div>
+    <fieldset>
+      <legend>路径裁剪（按弧长比例）</legend>
+      <label>起点 <input id="clipStart" type="range" min="0" max="1" step="0.01" value="0"></label>
+      <label>终点 <input id="clipEnd" type="range" min="0" max="1" step="0.01" value="1"></label>
+    </fieldset>
+    <fieldset>
+      <legend>路径变形</legend>
+      <textarea id="morphInput" rows="2" spellcheck="false">M100 300 Q400 50 700 300 Q400 550 100 300 Z</textarea>
+      <button id="morphBtn">开始变形</button>
+    </fieldset>
+    <fieldset>
+      <legend>存档 (IndexedDB)</legend>
+      <div class="row">
+        <input id="pathName" type="text" placeholder="名称">
+        <button id="saveBtn">保存</button>
+      </div>
+      <ul id="savedList"></ul>
+    </fieldset>
+    <fieldset>
+      <legend>测试样例</legend>
+      <ul class="samples">
+        <li><a href="#" data-sample="M50 300 L750 300">直线</a></li>
+        <li><a href="#" data-sample="M100 400 C100 100 700 100 700 400">三次贝塞尔</a></li>
+        <li><a href="#" data-sample="M100 300 A100 80 0 1 1 300 300 A100 80 0 1 1 100 300 Z">闭合弧线</a></li>
+        <li><a href="#" data-sample="M100 300 A50 50 0 0 1 200 300">弧线(小半径自动放大)</a></li>
+        <li><a href="#" data-sample="M100 100 h600 v400 h-600 Z">相对指令矩形</a></li>
+        <li><a href="#" data-sample="M50 300 C 150 100, 350 100 450 300 S750 500 700 300 X 10">含语法错误</a></li>
+        <li><a href="#" data-sample="long">超长路径(2000 段随机曲线)</a></li>
+      </ul>
+    </fieldset>
+  </aside>
+</main>
+<script type="module" src="js/main.js"></script>
+<script>
+// 样例填充（含程序生成的超长路径）
+document.querySelectorAll('[data-sample]').forEach(a => {
+  a.addEventListener('click', (e) => {
+    e.preventDefault();
+    let d = a.dataset.sample;
+    if (d === 'long') {
+      const parts = ['M0 300'];
+      let x = 0, y = 300, seed = 42;
+      const rnd = () => (seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff;
+      for (let i = 0; i < 2000; i++) {
+        const nx = x + 20 + rnd() * 30, ny = 100 + rnd() * 400;
+        parts.push(`C${x + 10} ${y + (rnd() - 0.5) * 200} ${nx - 10} ${ny + (rnd() - 0.5) * 200} ${nx.toFixed(1)} ${ny.toFixed(1)}`);
+        x = nx; y = ny;
+        if (x > 780) { parts.push(`M10 ${(100 + rnd() * 400).toFixed(1)}`); x = 10; y = 100 + rnd() * 400; }
+      }
+      d = parts.join(' ');
+    }
+    const input = document.getElementById('pathInput');
+    input.value = d;
+    input.dispatchEvent(new Event('input'));
+  });
+});
+</script>
+</body>
+</html>
